@@ -3,14 +3,21 @@ var charactersGuessed=[];
 var startButton=document.querySelector(".start-button");
 var display=document.querySelector(".display");
 var timerEL=document.querySelector("#timer");
+var scoreTotal = document.querySelector(".scoreTotal");
+var scoreWins = document.querySelector(".wins");
+var scoreLosses = document.querySelector(".losses");
 var displayWord;
 var timeInterval;
 var secondsLeft=20;
 var counter=0;
-var wins=0;
+var wins;
 var losses=0;
 
+
+
 startButton.addEventListener("click",function(){
+    secondsLeft=20;
+    clearInterval(timeInterval);
     displayWord = [];
     setTime();
     for (let i = 0; i < words.length; i++) {
@@ -36,7 +43,14 @@ document.addEventListener("keydown", function(e) {
     } 
     displayWord = displayWord.join("");
     display.textContent = displayWord;
-    console.log(displayWord);
+    if(counter===words.length){
+        wins++;
+        storage();
+        clearInterval(timeInterval);
+        
+    }
+
+    
 })
 
 
@@ -48,18 +62,29 @@ function setTime(){
         if(secondsLeft<=0){
             clearInterval(timeInterval);
             losses++;
+            storage();
+            
         }
 
     },1000)
 }
 
+function storage() {
+    localStorage.setItem("wins", wins);
+    localStorage.setItem("losses", losses);
+
+    scoreWins.textContent = wins;
+    scoreLosses.textContent = losses;
+}
 
 
 function mainFunction(){
 
-    if(counter===words.length){
-        wins++;
-    }
+
+    wins = localStorage.getItem("wins");
+    losses = localStorage.getItem("losses");
+
+    storage();
 
 }
 mainFunction();
